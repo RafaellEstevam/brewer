@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml" 
+xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:brewer="http://brewer.algaworks.com"
+layout:decorate="~{layout/LayoutPadrao}"><!--2-->
+	
+<head>
+	<title>Cadastro de cerveja</title>
+	<link rel="stylesheet" th:href="@{/stylesheets/vendors/upload.min.css}"/><!-- 9 -->
+	
+	
+</head><!-- 3 -->
+
+<body>
+	<section layout:fragment="conteudo"><!--4-->
+		<div class="page-header">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-10">
+						<h1>Cadastro de cerveja</h1>
+					</div>
+					<div class="col-sm-2">
+						<div class="aw-page-header-controls">
+							<a class="btn btn-default" th:href="@{/cervejas}"><!-- vai para /cervejas >>> GET -->
+								<i class="fas fa-plus-circle"></i> <span class="hidden-xs hidden-sm">Pesquisa</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="container-fluid">
+
+			
+
+			<form method="POST" th:object="${cerveja}" class="form-vertical  js-form-loading">
+	
+				<!-- 6 (código abaixo foi substituído pela tag 'brewer:message'. ver item 8) 
+				<div th:replace="fragments/MensagensErroValidacao :: mensagemErro"></div>
+				<div th:replace="fragments/MensagemSucessoValidacao :: mensagemSucesso"></div>
+				 -->
+				
+				<brewer:alertmessage/><!-- 8 -->
+				
+				<div class="row">
+					<div class="col-sm-2 form-group bw-required" brewer:classforerror="sku"><!--7 substituiu th:classappend="${#fields.hasErrors('sku')} ? has-error"-->
+						<label for="sku" class="control-label">SKU</label> 
+						<input id="sku" type="text" class="form-control" th:field="*{sku}"/>
+					</div>
+					
+					<div class="col-sm-10 form-group bw-required" brewer:classforerror="nome">
+						<label for="nome" class="control-label">Nome</label> 
+						<input id="nome" type="text" class="form-control" th:field="*{nome}"/>
+					</div>
+					
+				</div>
+
+				<div class="form-group bw-required" brewer:classforerror="descricao">
+					<label for="descricao" class="control-label">Descrição</label>
+					<textarea id="descricao" rows="3" class="form-control" th:field="*{descricao}"></textarea>
+				</div>
+
+				<div class="row">
+					<div class="col-sm-3 bw-required" brewer:classforerror="estilo">
+						<label for="estilo" class="form-label control-label">Estilo</label>
+						 
+						 <div class ="bw-field-action">
+						 	<select id="estilo" class="form-control" th:field="*{estilo}">
+								<option value="">Selecione o estilo</option>
+								<option th:each="estilo : ${estilos}" th:value="${estilo.id}" th:text="${estilo.nome}">Pale Leger</option>
+							</select>
+							<div class="bw-field-action__icon">
+								<a href="#" class="bw-glyphicon-large" data-toggle="modal" data-target="#modalCadastroRapidoEstilo">
+									<i class="fas fa-plus-circle"></i>
+								</a>
+							</div>
+						 </div> 
+					</div>
+					
+					<div class="col-sm-3 bw-required"  brewer:classforerror="sabor">
+						<label for="sabor" class="form-label control-label">Sabor</label>
+						 <select id="sabor" class="form-control" th:field="*{sabor}">
+							<option value="">Selecione o sabor</option>
+							<option th:each="sabor : ${sabores}" th:value="${sabor}" th:text="${sabor.descricao}">Adocicada</option>
+						</select>
+					</div>
+					
+					<div class="col-sm-3 form-group bw-required"  brewer:classforerror="teorAlcoolico">
+						<label for="teorAlcoolico" class="control-label">Teor alcoólico</label>
+						<div class="input-group">
+							<input id="teorAlcoolico" type="text" class="form-control js-decimal" th:field="*{teorAlcoolico}"/>
+							<div class="input-group-addon">%</div><!-- chama-se Input-group -->
+						</div>
+					</div>
+					
+					<div class="col-sm-6 col-lg-3 form-group bw-required"  brewer:classforerror="origem">
+						<label for="origem" class="control-label">Origem</label>
+						<div>
+							<div th:each="origem : ${origens}" class="radio radio-inline">
+								<input th:id="|id_${origem}|" type="radio" th:value="${origem}" th:field="*{origem}"> <!-- 5 -->
+								<label th:for="|id_${origem}|" th:text="${origem.descricao}">Nacional</label>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+
+				<div class="row">
+					<div class="col-sm-3 form-group bw-required" brewer:classforerror="valor">
+						<label for="valor" class="control-label">Valor</label>
+						<div class=" input-group">
+							<div class="input-group-addon">R$</div>
+							<input id="valor" type="text" class="form-control js-decimal" th:field="*{valor}">
+						</div>
+					</div>
+
+					<div class="col-sm-3 form-group bw-required"  brewer:classforerror="comissao">
+						<label for="comissao" class="control-label">Comissão</label>
+						<div class="input-group">
+							<input id="comissao" type="text" class="form-control js-decimal" th:field="*{comissao}"/>
+							<div class="input-group-addon">%</div>
+						</div>
+					</div>
+
+					<div class="col-sm-3 form-group bw-required"  brewer:classforerror="quantidadeEstoque">
+							<label for="estoque" class="control-label">Estoque</label> 
+							<input id="estoque" type="text" class="form-control js-plain" th:field="*{quantidadeEstoque}"/>
+					</div>
+				</div>
+				
+				<div class="row"><!-- 10 -->				
+					<div class="form-group col-sm-12">
+						<input type="hidden" th:field="*{foto}"/>
+						<input type="hidden" th:field="*{contentType}"/>
+					
+					
+						<label class="control-label">Foto</label>
+							
+						<div class="js-container-foto-cerveja" th:attr="data-url-fotos=@{/fotos}"><!-- 11 -->
+							<div id="upload-drop" class="bw-upload">
+								<i class="fas fa-cloud-upload-alt"></i>
+								<span>Arraste a foto aqui ou </span>
+							    <a class="bw-upload-form-file">selecione <input type="file" id="upload-select"accept=".jpg,.jpeg,.png"></a>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+				
+
+				<div class="form-group">
+					<button class="btn  btn-primary" type="submit">Salvar</button>
+				</div>
+			</form>
+		</div>
+		
+		<div th:replace="estilo/CadastroRapidoEstilo :: modal"></div>
+		<th:block th:replace="hbs/FotoCerveja :: fotoCervejaTemplate"></th:block>
+		
+	</section>
+	<th:block layout:fragment="javascript-extra">	
+		<script th:src="@{/javascript/estilo.cadastro-rapido.js}"></script>
+		<script th:src="@{/javascript/vendors/uikit.min.js}"></script><!-- 9 -->
+		<script th:src="@{/javascript/vendors/upload.min.js}"></script><!-- 9 -->
+		<script th:src="@{/javascript/vendors/handlebars.min.js}"></script>
+		<script th:src="@{/javascript/cerveja.upload-foto.js}"></script>
+	</th:block>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+PRINCIPAIS TAGS DO THYMELEAF ATÉ AGORA:
+
+th:each
+th:if
+th:class
+th:classappend
+th:remove
+th:with (me permite criar variáveis)
+th:attr (me permite adicionar qualquer atributo na tag. Ver CadastroCliente.html ou 16.4)
+_____________________________________________________________________________________________________________________________________________________________________________
+1.
+1º formulário que montamos em 4.3. 
+<h1>Cadastre sua cerveja</h1>
+
+<form method="POST" th:object = "${cerveja}">
+	
+	
+	<div th:each="erro : ${#fields.detailedErrors()}">
+		<span th:text = "${erro.message}"></span>
+	</div>
+	<br>
+	
+	<span th:text="${mensagem}"></span><br>
+	
+	<label for="sku">SKU</label><br>
+	<input type="text" id="sku" th:field="*{sku}"><br> 
+	
+	<label for="nome">Nome</label><br>
+	<input type="text" id="nome" th:field ="*{nome}"><br>
+	
+	<label>Descricao</label><br>
+	<textarea rows="7" cols="40" th:field="*{descricao}"></textarea> <br>
+	
+	<input type="submit" value="Salvar">
+</form>
+
+
+>>> "${cerveja}" é o objeto que recebemos dos métodos do Controller. Por isso que qdo carregamos a pagina pela primeira vez é necessário colocar um obj cerveja 
+no construtor do metodo que devolve essa pagina pela 1º vez. É nesse objeto que as linhas de baixo vão verificar se houve algum erro de validação e etc. 
+O Spring entende que esse objeto cerveja diz respeito ao que está no método que o enviou e se possui ou não erro de validação. O que acontece é que o Spring
+é inteligente o suficiente para entender que quando colocamos um objeto no construtor de um método lá no Controller, é pq queremos que aquele objeto esteja 
+disponível na view. Por isso, nem precisamos colocar o model nesses casos. 
+
+>>> th:field ="*{sku}" significa que aquele input está relacionado com o atributo (*) sku do objeto passado em th:object.
+
+
+_____________________________________________________________________________________________________________________________________________________________________________		
+2.(5.5) 
+>>> linha 5: Também coloco a tag do dialect para me disponibilizar as tags.
+>>> linha 6: Especificamos com qual layout essa página deve ser decorada(no sentido de estilizar). Entao falamos que essa página vai ser decorado com o arquivo
+"layout/LayoutPadrao". Perceba que é o diretório onde o arquivo está. A partir desse momento podemos tirar dessa página tudo o que o layout padrão já fornece, ou seja, header
+(tem que ser deixada só a tag), navbar, aside e footer. Em 16.7 passamos a colocar o ~{}, como nova exigencia.
+
+_____________________________________________________________________________________________________________________________________________________________________________
+3.(5.5)
+>>> NÃO PODE TIRAR A TAG <head>, SE N DÁ ERRO!	
+
+_____________________________________________________________________________________________________________________________________________________________________________
+
+4. (5.5)
+>>> Então no body  colocamos somente a parte que vai ser encaixada dentro do layout padrão, colocamos layout:fragment= "conteudo". 
+Perceba que ele leva o mesmo nome que tem lá. 
+Obs:tiramos as classes que tinha aqui, pois o layout padrão já as leva.
+
+_____________________________________________________________________________________________________________________________________________________________________________
+5. (9.5)
+>>> Poderíamos ter colocado o "id" e o "for" só om "${origem}", que já ia colocar o próprio nome do enum. Como a intenção do professor era colocar 
+esses valores como id_Nacional, por exemplo, então ele tinha que concatenar a palavra "id" com o a info da enum. Por isso ele usou pipes (|) para
+concatenar.	
+_____________________________________________________________________________________________________________________________________________________________________________
+6. (10.1)
+>>> Sobre o alerta. No final o jogamos para um arquivo separado e fizemos um replace, como se pode ver. Poderíamos ter usado um include também, mas teríamos que deixar
+a primeira div aqui (só pega a parte de dentro, lembra). O professor usou um include mas de outra forma. Ele jogou toda a div de alerta pra outro documento 
+(esse doc só tem os imports do thymeleaf no html e já a div do alerta direto, sem o th:fragment) e aqui usou um th:block com um th:include, chamando somente a página.
+
+Mas imagine que se tenha a div de alerta aqui mesmo. Se quisessemos colocar essa div de alerta fora do form (antes dele), esse código teria que ficar assim:
+
+<div class="alert  alert-danger  alert-dismissible" role="alert" th:if="${#fields.hasErrors('${cerveja.*}')}">
+	<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button>
+	<th:block th:each="detailedError : ${#fields.detailedErrors('${cerveja.*}')}">
+		<div><i class="fa  fa-exclamation-circle"></i> olhar aula 10.1  aos 04:00 para ver o que vem aqui</div>
+	</th:block>	
+</div>
+_____________________________________________________________________________________________________________________________________________________________________________
+7. (13.2) 
+>>>> Nesse capítulo começamos a estender o Thymeleaf. Significa que vamos criar um dialeto com nossas próprias tags. Um dialeto é uma biblioteca com as tags. Cada tag possui
+um processador que vai processá-la. A idéia aqui é substituir a tag 'th:classappend="${#fields.hasErrors('sku')} ? has-error"' por uma nossa que vai fazer a mesmas coisa,
+porém terá uma chamada mais fácil, como "brewer:classforerror('nome')". É só para demonstrar como podemos criar nosso próprio dialeto.
+ 
+Passos:
+
+1.Vamos criar o dialeto. Dentro da pasta thymeleaf, criamos a classe'BrewerDialect'. Depois vamos voltar nela para preencher a lista com os processadores.
+2.Vamos colocar o dialeto novo lá em  WebConfig, no método "templateEngine()", como fizemos com o Thymeleaf Layout Dialect.
+3.Criamos nosso primeiro processador chamado 'ClassErrrorAttributeTagProcessor'(Processador da tag classerror).
+4.Voltamos lá em BrewerDialect e colocamos o processador criado dentro do set, no método getProcessors(). Cada processador que criarmos temos que colocar 
+nessa lista.
+5.Pronto, agora podemos colocar nossa tag no template. Não esquecer de colocar o namespacing lá em cima (xmlns:brewer="http://brewer.algaworks.com").
+
+Obs: xmlns:brewer="http://brewer.algaworks.com". Podemos colocar qualquer coisa nas "", pois ele não vai procurar pela url e sim pelo nome do dialeto "brewer".
+_____________________________________________________________________________________________________________________________________________________________________________
+8. (13.3) Criamos uma nova tag para o nosso dialeto, que vai levar exibir esses componentes(</th:block>) para nós. O processador dessa tag <brewer:alertmessage/> é o 	
+   'AlertMessageElementTagProcessor'.
+
+_____________________________________________________________________________________________________________________________________________________________________________
+9. (14.2) Começamos a ajustar o front-end do upload de fotos. Tivemos que usar o UIkit. Colocamos o js e o css nas pastas e fizemos a chamada aqui.  
+
+_____________________________________________________________________________________________________________________________________________________________________________
+10. (14.2) Montamos o HTML do botão de upload. Ele basicamente copiou a estrutura do site. As classes CSS que são chamadas nas divs do upload são nossas. Criamos um
+script javascript solto aqui mesmo para implementar o javascript do botão upload. Basicamente estamos configurando como o arquivo será enviado(no formato json),
+para onde(definido pelo 'action'. Se não setarmos, por padrão ele faz um POST para a mesma url onde ele está, ou seja, cervejas/novo. Ou seja, então ele vai cair no outro método).
+Os métodos 'UIkit.uploadSelect($('#upload-select'),settings);' e 'UIkit.uploadDrop($('#upload-drop'),settings);' ativam o select e a função de drop quando arrastarmos
+uma foto.
+		
+Como isso chega no controller? Bom, vamos ter um controller específico para as fotos, chamado 'FotoController'. Na verdade será um @RestController, já que só vai
+manipular JSON.	Ir até 'FotoController' para ver as implementações.
+_______________________________________________________________________________________________________________________________________________________________________________		
+
+11. (14.9) Aos 03:50, aproximadamente. Usamos esse atributo para podermos pegar no javascript a url /brewer/fotos. O thymeleaf coloca o contexto da aplicação
+automaticamente. Não precisamos mais escrever /brewer/algumacoisa lá no cerveja.upload-foto.js.  ver o atributo action dentro do obj settings em cerveja.upload-foto.js.
+				
+-->
+
+
+

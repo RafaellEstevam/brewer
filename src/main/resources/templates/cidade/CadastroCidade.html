@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns= "http://www.w3.org/1999/xhtml" xmlns:th= "http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate = "~{layout/LayoutPadrao}">
+<head>
+	<title>Cadastro de cidade</title>
+	
+</head>
+<body>
+	<section layout:fragment="conteudo">
+		<div class="page-header">
+			<div class="container-fluid">
+				<h1>
+					Cadastro de cidade
+				</h1>
+			</div>
+		</div>
+		
+		<div class="container-fluid">
+			
+			<form method="POST" th:object="${cidade}"  class="form-vertical  js-form-loading">
+				
+				<div class="row">
+					<div class="col-sm-4 bw-required">
+						<label for="estado" class="control-label">Estado</label>
+						<select id="estado" class="form-control">
+							<option value="">Selecione o estado</option>
+						</select>
+					</div>
+					<div class="col-sm-8 form-group bw-required">
+						<label for="nome" class="control-label">Nome</label>
+						<input type="text" id="nome" class="form-control" th:field="*{nome}">
+					</div>
+				</div>
+				
+				<button type="submit" class="btn  btn-primary">Salvar</button>
+			</form>
+		</div>
+	</section>
+</body>
+</html>

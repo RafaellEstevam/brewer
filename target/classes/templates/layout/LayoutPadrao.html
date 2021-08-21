@@ -1,0 +1,131 @@
+<!--0-->
+<!DOCTYPE html>
+<html lang="pt" xmlns= "http://www.w3.org/1999/xhtml" 
+xmlns:th= "http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"><!-- 1 --> 
+<head>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+	<title>Brewer</title>
+
+	<!-- 2 -->
+	<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/vendors.min.css}"/> 
+	<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/algaworks.min.css}"/>
+	<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/application.css}"/>
+	<link rel="stylesheet" type="text/css" th:href="@{/stylesheets/brewer.css}"/>
+	<link rel="shortcut icon" th:href="@{/images/favicon.png}"/>
+	<script src="https://kit.fontawesome.com/4cafcb1c1a.js" crossorigin="anonymous"></script>
+	
+</head>
+<body>
+	<div class="aw-layout-page">
+		
+		<div th:replace="/layout/fragments/BarraNavegacao :: navbar"></div><!-- 6 -->
+		
+		<div th:replace = "/layout/fragments/MenuLateral :: layout-sidebar"></div>
+		
+		<section class="aw-layout-content  js-content" layout:fragment="conteudo"></section><!--4-->
+		
+		<div th:replace ="/layout/fragments/Footer :: layout-footer"></div>
+		
+	</div>
+	<script th:src="@{/layout/javascripts/vendors.min.js}"></script>
+	<script th:src="@{/layout/javascripts/algaworks.min.js}"></script>
+	<script th:src="@{/javascript/vendors/jquery.maskMoney.min.js}"></script><!-- 5 -->
+	<script th:src="@{/javascript/vendors/jquery.mask.min.js}"></script><!-- 8 -->
+	
+	<script th:src="@{/javascript/brewer.js}"></script><!-- 5 -->
+	
+	<th:block layout:fragment="javascript-extra"></th:block><!-- 7 -->
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+0. (5.5)
+>>> Monto aqui toda a parte que eu quero que seja comum para as páginas que estenderem esse arquivo "layoutPadrao". 
+Como o nome desse arquivo é "layout padrão", vamos por aqui o que TODAS as páginas teráo em comum (header, aside e footer). Depois podemos criar
+um outro layout cadastro, que vai levar a parte que todas as páginas de cadastro terão em comum.
+____________________________________________________________________________________________________________________________________________________________________ 
+1. (5.5)
+>>> Perceba que incluímos o novo dialeto(thymeleaf-layout-dialect) acima, para que possamos usar suas tags. O que fazemos agora é definir que pontos desse 
+layout padrão eu quero que seje preenchida com outras páginas. Como a seção de conteúdo, por exemplo.
+____________________________________________________________________________________________________________________________________________________________________
+2. (5.3)
+>>> tivemos que mudar as URLs, pois por padrão elas vem como assets/stylesheet. Ou seja, o Spring não consegue encontrar os recursos já  que essa pasta não existe. 
+>>> Primeiro temos que falar para o Spring onde estão os recursos estáticos da nossa aplicação (nesse caso na pasta static do classpath). Então lá em webConfig 
+aplicamos o método "addResourceHandlers()", que serve para informar justamente isso.  
+
+>>>Depois usamos um recurso do thymeleaf chamado "URL Expressions" para não precisarmos colocar o contexto da aplicação na url. É um recurso útil pois se eu trocar
+o contexto da minha aplicação eu não tenho que procurar em cada ponto do meu sistema onde os recursos são chamados e trocar o contexto. Veja como era antes e agora 
+como ficou:
+CSS-
+ANTES:	href="/brewer/layout/stylesheets/vendors.min.css"
+DEPOIS: th:href = "@{/layout/stylesheets/vendors.min.css}"
+	
+JAVASCRIPT-
+ANTES: <script src="/brewer/layout/javascripts/vendors.min.js"></script>
+DEPOIS: <script th:src="@{/layout/javascripts/vendors.min.js}"></script> 
+____________________________________________________________________________________________________________________________________________________________________
+3. >>> (Foi para BarraNavegação.html, quando fragmentamos) O professor acabou criando uma outra pasta images fora de layout para abrigar o logo brewer. 
+Eu manteria o logo na pasta layout/images.
+____________________________________________________________________________________________________________________________________________________________________
+4. (5.5) 
+>>> É a seção onde ficará o conteúdo da página.
+>>> layout:fragment= "conteudo" é uma espécie de ID que indica qual parte da página que chamar usar esse layout padrão que vai ser encaixada aqui. Ou seja, 
+a página que chamar esse layout, deve ter essa mesma tag na parte que vai ser encaixada aqui.
+____________________________________________________________________________________________________________________________________________________________________
+5. (5.7)
+>>> Foi criada em static a pasta "javascript" para levar os javascripts que criamos e dentro dele a pasta "vendors", que vai levar os javascripts de terceiros, como 
+o maskMoney. Lembre-se que o maskMoney precisa do Jquery para funcionar. Não o colocamos aqui pois o próprio layout já nos fornece. Criamos o javascrip "brewer.js".
+____________________________________________________________________________________________________________________________________________________________________
+6. (5.8)
+Jogamos a barra de navegação em um arquivo separado para fragmentarmos o layout e deixá-lo mais organizado. Assim, se eu quiser trabalhar só na navbar, eu tenho um 
+arquivo separado. 
+IMPORTANTE: Se não colocarmos os "::", especificando que parte do arquivo queremos colocar alí, ele vai colocar o arquivo inteiro nesse pedaço, desde o <!DOCTYPE>
+até </html>. Então temos que especifiar qual o item que queremos que seja "colado". Por isso, lá em "BarraNavegação.html" colocamos a tag th:fragment="navbar". 
+
+>>> Esse é o replace. Outra opção seria o include (é só trocar replace por include). A diferença é que o conteúdo que o include vai "colar" é sempre a partir do 
+elemento imediatamente após a tag th:fragment. Ou seja, se usássemos o include aqui, a tag <nav> lá de BarraNavegaçao.html ia ficar de fora.
+
+OBS: Também poderíamos ter um único arquivo com todos os fragmentos (navbar, aside e footer) e na hora de chamar, só mudar o nome do elemento após :: .
+____________________________________________________________________________________________________________________________________________________________________
+7. (5.12)
+
+Bom, imagine que cada página do nosso sistema tenha arquivos javascripts que serão usados somente naquela página específica. Como somente "section" será pega dessas
+páginas e coladas em "LayoutPadrao", significa que os javascripts dessas páginas não seriam lidos, já que ficam depois da section, antes de "body", e que portanto
+teriam que ser colocados todos antes do "body" de LayoutPadrao, o que tornaria esse bloco imenso, certo?
+Para resolver esse problema o Thymeleaf nos fornece essa tag <th:block th:fragment="">, que vamos usar nas páginas para indicar que aquele bloco também deve ser 
+colado na parte também indicada por <th:block th:fragment=""> em LayoutPadrao.
+
+Ver item 2 de CadastroUsuario.html.
+
+8.(16.1) Importando o javascript do "jquery mask plugin" para o documento. O usamos para aplicar 
+mascaras aos demais campos dos formulários, como telefone, email e etc. O uso de suas funcionalidades estão em 
+brewer.js. 
+
+
+ -->
+
+
+
+
+
+
+
+
+
+
+

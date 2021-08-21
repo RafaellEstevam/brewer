@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <!DOCTYPE xml> -->
+<Configuration status="WARN">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %logger{36}: %msg%n" />
+		</Console>
+				
+	</Appenders>
+	
+	<Loggers>
+		<Logger name="com.algaworks.brewer" level="debug"/>
+	
+		<Logger name="org.hibernate.SQL" level="debug"/><!-- 4 -->
+	
+		<Root level="error">
+			<AppenderRef ref="Console" />
+		</Root>
+	</Loggers>
+</Configuration> 
+
+<!-- 
+(6.3)
+3.... Lembre-se que vamos usar o Log4J 2 por debaixo dos panos, então é ele que temos que configurar.
+Vamos criar o arquivo log4j2.xml em "resoruces" e lá colocaremos as configurações.
+
+>>> Status= "Warn": O status na tag Configuration representa o level dos logs internos do log4j que devem ser mostrados no console. Isso quer dizer que com o status=WARN,
+ se existir algum erro interno no log4j e o level for warn, error ou fatal ele será logado. https://logging.apache.org/log4j/2.x/manual/customloglevels.html 
+ para ver os níveis de log.
+
+>>> Appenders é para onde eu posso mandar os registros. Posso incluir vários lugares para mandar os registros, como arquivos ou banco de dados. 
+Perceba que a única opção que colocamos indica que os registros vão para o console(name="Console" target= "System_out"). 
+Podemos incluir outros lugares e depois configurar para que determinado nível de log seja mandado sempre para tal lugar.
+Perceba também, dentro de <PatternLayout>, que posso editar a forma como eu quero que os registros apareçam. 
+Nessec caso, mostra a data (inclusive com milisegundos), o nível do log, a classe que gerou o log e a mensagem em si.
+
+
+>>> Dentro de "Loggers" temos :
+
+1. 	<Root level="error">
+		<AppenderRef ref="Console" />
+	</Root>
+	
+Significa: "Todo logger que for disparado na aplicação inteira e que for do nível "error"(ou seja, pega de error para cima na tabela, incluindo 
+"fatal") manda para o console.
+
+
+2.     <Logger name="com.algaworks.brewer.controller" info"/>
+
+Significa: "Todo logger que for disparado no pacote "com.algaworks.brewer.controller" e que for do nível "info"(ou seja, pega de info para cima na tabela, 
+incluindo "error") manda para o console.
+
+______________________________________________________________________________________________________________________________________________________
+4. 9.2
+
+
+
+
+ -->

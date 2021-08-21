@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml" 
+xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:brewer="http://brewer.algaworks.com"
+layout:decorate="~{layout/LayoutPadrao}">
+	
+<head>
+	<title>Pesquisa de cerveja</title>
+</head>
+<body>
+	<section layout:fragment="conteudo">
+		<div class="page-header">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-10">
+						<h1>Pesquisa de cerveja</h1>
+					</div>
+					<div class="col-sm-2">
+						<div class="aw-page-header-controls">
+							<a class="btn btn-default" th:href="@{/cervejas/novo}">
+								<i class="fas fa-plus-circle"></i> <span class="hidden-xs hidden-sm">Nova cerveja</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="container-fluid">
+			
+				<form method="GET" th:object="${cervejaFilter}"> <!-- 1 -->
+					<div class="row">
+						<div class="col-sm-6 form-group">
+							<label for="sku" class="control-label">SKU</label>
+							<input id="sku" type="text" class="form-control" th:field="*{sku}"/>
+						</div>
+						
+						<div class="col-sm-6 form-group">
+							<label for="nome" class="control-label">Nome</label>
+							<input id="nome" type="text" class="form-control" th:field="*{nome}"/>		
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-sm-6 form-group">
+							<label for="estilo" class="control-label">Estilo</label>
+							<select id="estilo" class="form-control" th:field="*{estilo}">
+								<option value="">Todos os estilos</option>
+								<option th:each="estilo : ${estilos}" th:text="${estilo.nome}" th:value="${estilo.id}"></option>
+							</select>	
+						</div>
+						<div class="col-sm-6 form-group">
+							<label for="sabor" class="control-label">Sabor</label>
+							<select id="sabor" class="form-control" th:field="*{sabor}">
+								<option value="">Todos os sabores</option>
+								<option th:each="sabor : ${sabores}" th:text="${sabor.descricao}" th:value="${sabor}"></option>
+							</select>	
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class=" form-group col-sm-6">
+							<label class="control-label">Origem</label>
+							
+							<div>
+								<div class="radio radio-inline" th:each="origem : ${origens}">
+									<input th:id="${origem}" type="radio" th:value="${origem}" th:field="*{origem}">
+									<label th:for="${origem}" th:text="${origem.descricao}"></label>
+								</div>
+								
+								<div class="radio radio-inline">
+									<input id="todasOrigens" type="radio" th:checked="*{origem} == null" name="origem" >
+									<label for="todasOrigens">Todas</label>
+								</div>
+							</div>	
+						</div>
+						<div class="col-sm-6">
+							<label for="valorDe">Valor Unitário</label>
+							<div class="form-inline">
+								<input id="valorDe" type="text" class="form-control aw-form-control-inline-sm js-decimal" th:field="*{valorDe}">
+								<label for="valorAte" class="aw-form-label-between">Até</label>
+								<input id="valorAte" type="text" class="form-control aw-form-control-inline-sm js-decimal " th:field="*{valorAte}">
+							</div>
+						</div>
+					</div>
+					
+					<button type="submit" class="btn btn-primary">Pesquisar</button>
+				</form>
+				
+				
+				<div class="table-responsive bw-tabela-simples">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th class="table-cervejas-col-foto"></th>
+								<th class="table-cervejas-col-sku">
+									<brewer:order page="${pagina}" field="sku" text="SKU"/><!-- Substitui o de baixo-->
+									
+									<!--<th:block th:replace="fragments/Ordenacao :: order (${pagina}, 'sku', 'SKU')"></th:block> 20-->
+								</th>
+								<th class="table-cervejas-col-nome">
+									<brewer:order page="${pagina}" field="nome" text="Nome"/><!-- 21. Substitui o de baixo-->
+									
+									<!--<th:block th:replace="fragments/Ordenacao :: order (${pagina}, 'nome', 'Nome')"></th:block> 20 -->
+								</th>
+								<th class="table-cervejas-col-estilo">Estilo</th>
+								<th class="table-cervejas-col-origem">Origem</th>
+								<th class="table-cervejas-col-valor">Valor</th>
+								<th class="table-cervejas-col-acoes"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="cerveja : ${pagina.conteudo}"> <!-- 3 -->
+								<td class="text-center">
+									<img th:src="@{/fotos/thumbnail.{foto}(foto = ${cerveja.getFotoOuMock()})}" class="img-responsive">	
+								</td>
+								<td class="text-center" th:text="${cerveja.sku}">AAA1234</td>
+								<td th:text="${cerveja.nome}">Cerveja Stella</td>
+								<td th:text="${cerveja.estilo.nome}">Dark Lager</td>
+								<td th:text="${cerveja.origem.descricao}">Internacional</td>
+								<td th:text="|R$ ${cerveja.valor}|">R$ 11.20</td>
+								<td class="text-right">
+									<a class="btn btn-link btn-xs js-tooltip"  title="Editar">
+										<i class="fas fa-pencil-alt"></i>
+									</a>
+									<a class="btn btn-link btn-xs"  title="Excluir">
+										<i class="fas fa-trash-alt"></i>
+									</a>
+								</td>	
+							</tr>
+						
+							<tr th:if="${pagina.vazia}"><!-- 10 -->
+								<td colspan="7" class="text-center">Nenhuma cerveja encontrada</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+							
+				<brewer:pagination page="${pagina}"/> <!-- 22 -->
+
+			</div>
+		</div>
+	</section>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+PRINCIPAIS TAGS DO THYMELEAF ATÉ AGORA:
+
+th:each
+th:if
+th:class
+th:classappend
+th:remove
+th:with
+
+
+1. Lembre-se, esse formulário vai para a mesma URL que gerou essa página, porém via GET. Ou seja, é um GET para /cervejas e vai cair no mesmo método que gerou a página.
+
+2. Esse atributo page (e outros que podem ser colocados junto) vai ser usado para construir o objeto pageable no controller. Isso é feito automaticamente devido à 
+   integração do Spring mvc com o Spring data. Lembrando que a requisição vai para a mesma URL que gerou a página, então vai ser um GET para /cervejas, porém com os 
+   parâmetros. Então vai algo como /cervejas?page=0 (foi só para mostrar como fica, não precisamos nos preocupar tanto). 
+   
+   th:href="|?page=${numeroPagina}|" DEVE ESTAR TUDO JUNTO, SEM ESPAÇOS.
+
+3. (15.8) O objeto retornado é do tipo Page. Estamos acessando a lista que está dentro do atributo content. QQr dúvida olhar o método GET no CervejaController. 
+
+4. (15.9) th:with serve para criar variáveis.
+
+5. (15.9 - +-04:50) th:remove="${pagina.first} vai remover a tag <a> se estivermos na 1º página. "tag" significa que queremos remover somente a tag <a> mas manter os 
+seus filhos. Nesse caso, o <span> vai ficar mas o link foi removido. Se quiséssemos remover tudo, colocaríamos "all" ao invés de "tag". Se quiséssemos manter o <a> e 
+remover os filhos, usaríamos "body".  
+
+th:href="|?page=${paginaAtual - 1}|" DEVE ESTAR TUDO JUNTO, SEM ESPAÇOS. O mesmo para  th:href="|?page=${paginaAtual + 1}|"  e th:href="|?page=${numeroPagina}|"
+
+
+6. Alguns atributos do objeto Page (variável pagina aqui) que chega aqui:
+*pagina.content = abriga a lista com os registros que correspondem à pagina solicitada.
+*pagina.first = retorna um boolean dizendo se pagina.number == à 1º página.
+*pagina.last = retorna um boolean dizendo se pagina.number == à ultima página.
+*pagina.totalPages = retorna o total de páginas.
+
+
+7. Quando o nº da página daquele <li> for igual à nº da pagina que foi selecionado pelo usuário (variavel paginaAtual), coloca a classe "active". 
+
+8. numeroPagina é o número da página real daquele loop. Em um determinado loop, o nº "fantasia" da página é 1 mas o nº real é 0. 
+
+9. (15.11) Nesse passo temos que mandar os filtros junto com o numero da pagina na requisição feita por <a>. Caso contrário o cervejaFilter chega no controller vazio
+e a paginação é feita com todas as cervejas.  
+
+10.(15.11)  ANTES: th:if="${#lists.isEmpty(pagina.content)}"
+11.(15.11)  ANTES: th:if="${not #lists.isEmpty(pagina.content)}"
+12.(15.11)  ANTES: th:with="paginaAtual=${pagina.number}" >> Aqui poderíamos tirar o th:with e chamar direto pagina.pagina atual onde fosse necessário no bloco. 
+															 Optamos por deixá-lo para mostrar que podemos usar o th:with para criar variáveis.
+13.(15.11)  ANTES: th:class="${pagina.first} ? disabled"
+14.(15.11)  ANTES: th:class="${pagina.last} ? disabled"
+15.(15.11)  ANTES: th:each="p : ${#numbers.sequence(1, pagina.totalPages)}"
+16.(15.11)  ANTES: th:href="|?page=${paginaAtual + 1}|" th:remove="${pagina.last} ? tag"
+17.(15.11)  ANTES: th:href="|?page=${paginaAtual - 1}|" th:remove="${pagina.first} ? tag"
+
+
+18.(15.12) Coloca a setinha para ordenação. Procurar por dropdown No bootstrap 4.  
+19.(15.14) Como passar Strings como parâmetros em métodos pelo thymeleaf.
+
+20. (15.15) A parte da ordenação foi jogada primeiro para um fragment e depois para um componente do thymeleaf( criamos uma tag nova para o dialeto brewer)
+	Veja como uma delas era antes: 
+	
+	<a th:href="${pagina.urlParaOrdenacao('nome')}" th:remove="${pagina.vazia} ? tag">
+		<span>Nome</span> 
+		<span class="dropup" th:remove="${pagina.descendente('nome')} ? tag" 
+			th:if="${pagina.ordenada('nome')}"> 
+			<span class="caret"></span> 
+		</span> 
+	</a> 
+	
+21. Criamos uma nova tag para o nosso dialeto brewer que vai "colar" exatamente a estrutura HTML que é exibida abaixo(olhar lá em cima). Para ver como esse
+processado foi implementado, ir em thymeleaf/processor/OrderElementTagProcessor. 
+
+22. Componente para paginação. Substitui o seguinte código: <th:block th:replace="fragments/Paginacao :: paginacao (${pagina})"></th:block>
+	
+	LEMBRE-SE: PARA CRIAR UM COMPONENTE DO THYMELEAF QUE INCLUI UMA ESTRUTURA HTML, PRIMEIRO JOGAMOS A ESTRUTURA HMTL PARA UM FRAGMENT USANDO "th:fragment > th:replace"
+	E DEPOIS SIM JOGAMOS ESSE FRAGMENT PARA UM COMPONENTE DO THYMELEAF. COLOCAMOS A TAG NO HTML MSM E DEPOIS CRIAMOS O PROCESSADOR DELA. NESSE CASO, É UM 
+	ELEMENT TAG PROCESSOR. Existe um exemplo disso na aula 15.15.
+--> 
+
+ 

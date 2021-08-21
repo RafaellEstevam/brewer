@@ -1,0 +1,301 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  
+  <groupId>com.Algaworks</groupId>
+  <artifactId>brewer</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>war</packaging>
+  
+  
+  <properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<failOnMissingWebXml>false</failOnMissingWebXml>
+
+						<!--Versões estão aqui -->
+		
+		<!-- Java -->
+		<java.version>1.8</java.version>
+		
+		<!-- Maven -->
+		<maven-compiler-pluging.version>3.2</maven-compiler-pluging.version>
+		
+		<!-- Thymeleaf -->
+		<thymeleaf.version>3.0.0.RELEASE</thymeleaf.version>
+		
+		<!-- Thymeleaf layout dialect -->
+		<thymeleaf-layout-dialect.version>2.0.0</thymeleaf-layout-dialect.version>
+		
+		<!-- Spring MVC -->
+		<spring-framework.version>4.3.0.RELEASE</spring-framework.version>
+		
+		<!-- Servlet API -->
+		<servlet.version>3.1.0</servlet.version>
+		
+		<!-- Flyway -->
+		<flyway-maven-plugin.version>4.0.2</flyway-maven-plugin.version>
+		
+		<!-- MySql -->
+		<mysql-connector-java.version>5.1.48</mysql-connector-java.version>
+		
+		<!-- Hibernate Entity Manager-->
+		<hibernate.version>5.1.0.Final</hibernate.version>
+		
+		<!-- Spring Data JPA --><!-- 3 -->
+		<spring-data-jpa.version>1.10.2.RELEASE</spring-data-jpa.version>
+		
+		<!-- Logging -->
+		<log4j.version>2.6</log4j.version>
+		<jcl-over-slf4j.version>1.7.21</jcl-over-slf4j.version>
+		
+		<!-- Bean Validation / hibernate validator-->
+		<hibernate-validator.version>5.2.4.Final</hibernate-validator.version>
+			
+		<!-- Jackson - JSON -->
+		<jackson-core.version>2.7.5</jackson-core.version>
+		
+		<!-- thumbnailator - Gerar Thumbnail --><!-- 4 -->
+ 		<!-- https://github.com/coobird/thumbnailator -->
+		<thumbnailator.version>0.4.8</thumbnailator.version>
+		
+		<!-- thymeleaf-extras-data-attribute -->
+		<thymeleaf-extras-data-attribute.version>2.0.1</thymeleaf-extras-data-attribute.version>
+		
+	</properties>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-pluging.version}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			
+			<!-- Plugin do Flyway --><!-- É um plugin do Maven, ou seja, vai ser um componente dele -->
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId><!-- 2 -->
+				<version>${flyway-maven-plugin.version}</version>
+				<configuration>
+					<driver>com.mysql.cj.jdbc.Driver</driver><!-- Perceba que precisamos da dependência do driver do MySql para que o flyway consiga se conectar com o BD -->
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+ 
+ 	<!-- Vai garantir que as versões das dependências sejam compatíveis umas com as outras. -->
+ 	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>${spring-framework.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<!-- Spring MVC -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<scope>compile</scope><!-- Essa dependência precisa ser incluída no empacotamento do projeto. Perceba que a maioria das dependências estão levando essa anotação -->
+			<exclusions><!-- 1 -->
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<!-- Servlet API -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>${servlet.version}</version>
+			<scope>provided</scope> <!-- Pois o Tomcat já fornece -->
+		</dependency>
+		
+		<!-- Thymeleaf -->
+		<dependency>
+			<groupId>org.thymeleaf</groupId>
+			<artifactId>thymeleaf</artifactId>
+			<version>${thymeleaf.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency><!-- 5 -->
+			<groupId>org.thymeleaf</groupId>
+			<artifactId>thymeleaf-spring4</artifactId>
+			<version>${thymeleaf.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		
+		<!-- Thymeleaf layout dialect (Para padronizar os layouts.VER O WEBCONFIG! (5.5) )--> 
+		<dependency>
+	    	<groupId>nz.net.ultraq.thymeleaf</groupId>
+	    	<artifactId>thymeleaf-layout-dialect</artifactId>
+	    	<version>${thymeleaf-layout-dialect.version}</version>
+		</dependency>
+		
+		<!-- Bean Validation / Hibernate Validator -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>${hibernate-validator.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		
+		<!-- Logging --><!-- 1.2 -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId><!-- 1 (Obs) -->
+			<version>${jcl-over-slf4j.version}</version>
+		</dependency>
+		
+		
+		<!-- Hibernate Entity Manager-->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-entitymanager</artifactId>
+			<version>${hibernate.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- Hibernate - Java 8 support - Suporte para datas que não tinha na época-->
+        <dependency>
+    		<groupId>org.hibernate</groupId>
+    		<artifactId>hibernate-java8</artifactId>
+    		<version>${hibernate.version}</version>
+    		<scope>compile</scope>
+		</dependency>
+		
+		<!-- MySQL Driver -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql-connector-java.version}</version>
+			<scope>provided</scope><!-- 2 -->
+		</dependency>
+		
+		<!-- Spring Data JPA -->
+		<dependency>
+		    <groupId>org.springframework.data</groupId>
+		    <artifactId>spring-data-jpa</artifactId>
+		    <version>${spring-data-jpa.version}</version>
+		</dependency>
+		
+		<!-- Jackson - JSON --><!-- 11.2 aos 21min.É só colocar essa biblioteca e ele já consegue converter -->
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>${jackson-core.version}</version>
+		    <scope>compile</scope>
+		</dependency>
+		
+		<!-- thumbnailator - Gerar Thumbnail -->
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+			<version>${thumbnailator.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		
+		<!-- Thymeleaf-extras-data-attribute (Dialeto para incluir atributos nas tags html de forma mais fácil 16.4) -->
+		<dependency>
+		    <groupId>com.github.mxab.thymeleaf.extras</groupId>
+		    <artifactId>thymeleaf-extras-data-attribute</artifactId>
+		    <version>${thymeleaf-extras-data-attribute.version}</version>
+		    <scope>compile</scope>
+		</dependency>
+		
+		
+		
+	</dependencies>
+</project>
+
+<!--  
+
+1.(6.2)
+O Spring nos fornece um esquema de Log padrão, chamado "Commons-Logging" mas a própria documentação recomenda fortemente trocá-lo por outra biblioteca de Log, 
+já que ele foi colocado somente para que a aplicação pudesse sair rodando quando a dependência do MVC fosse colocada. Vamos então substituir o commons-logging pelo 
+Log4J 2 e utilizar o SLF4J para encapsular suas funcionalidades. Significa que ao invés de usarmos as classes do Log4J 2 vamos, na verdade, utilizar as do SLF4J. 
+Dessa forma, sempre que quisermos trocar a implementação de Log, como trocar o Log4j 2 pelo Log4j 3, é só trocar a dependência deste e fazer algumas configurações 
+simples, mas não precisaremos mudar nenhuma linha de código nas nossas classes de Log.
+	Passos:
+
+	1- Tirar o commons-logging de dentro da dependência do Spring MVC. Fazemos isso com a tag <exclusions>. 
+	   Obs: Se clicarmos em "Dependency Hierarchy" na barra inferior do pom.xml, podemos ver que o commons-logging 
+	   está dentro da dependência principal "spring-webmvc". Portanto é dele que temos que tirar. Não precisamos 
+	   especificar a versão. Após tirarmos o commons-logging, se tentarmos subir a aplicação dará erro, 
+	   já que ela o utiliza para subí-la. Ele vai reclamar que está faltando a classe "commons-logging.LogFactory".
+	   
+	2- Agora que tiramos o commons-logging precisamos substituí-lo por outro. Vamos então aplicar as dependências do 
+	   Log4J 2 e do SLF4J.   
+
+	3- Agora precisamos nossos próprios arquivos de configuração para que Log4J trabalhe da maneira que queremos. 
+	   Repare que se rodarmos a aplicação agora, mesmo sem aplicar nossas configurações ela vai rodar, aplicando 
+	   as configuração padrão mas vai alertar que não encontrou nenhum arquivo de configuração. Nosso arquivo de 
+	   configuração é o log4j2.xml. Vê-lo em "resources".
+
+
+Obs: Comentamos no item 1 que após tirarmos o commons-logging, se tentarmos subir a aplicação dará erro. Ele vai reclamar que está faltando a classe
+     "commons-logging.LogFactory", certo? 
+      A inclusão da dependência "jcl-over-slf4j" é a que vai suprir essa falta. Ele vai colocar seus arquivos no lugar e fazer uma ponte para que o SLF4J chegue
+      no Log4J.
+_______________________________________________________________________________________________________________________________________________________________________
+ 2. (8.4)
+ 
+ Importante deixar como provided, pois eu não quero empacotá-lo no meu projeto. O Tomcat já o fornece. É só para ajudar o Flyway a se conectar com o banco.
+ 
+ Depois de colocada as dependências do Flyway, vamos criar a pasta db/migration dentro de resources elá dentro vamos colocar arquivos, que são as versões que eu vou
+ aplicar no banco de dados. Os nomes dessas versões sempre tem que ser no padrão "V+nºda versão+__+nome da versao(o que aquela versao faz)". 
+ Ex: "V01__criar_tabelas_estilo_e_cerveja.sql". Então quando eu leio essa migração eu sei que nesse sql eu vou criar as tabelas estilo e cerveja.
+ 
+Quando, no futuro, eu precirar adicionar o atributo "foto" na classe cerveja, eu vou criar uma nova migração e dentro dela o script alter table da tabela cerveja.
+_______________________________________________________________________________________________________________________________________________________________________
+3. (9.2)
+
+>>> Vamos usar o Spring data mesmo para fazer esse projeto. Observe os passos:
+ 
+1. A primeira coisa, claro, é incluir a dependência dele.
+2. Criamos a pasta META-INF em src/ main/webapp. Dentro dele, criamos o arquivo "context.xml".
+3. Criar a classe JPAConfig dentro de config. IR ATÉ JPAConfig para ver as configurações.
+4. Ir até AppInitializer.class para adicionar algumas configurações. Elas foram marcadas com o nº 1. 
+_______________________________________________________________________________________________________________________________________________________________________
+4. (15.3)
+
+>>> Biblioteca para gerar thumbnails. Vamos usá-la para redimensionar a foto da cerveja.
+ 
+ 
+ 
+5. Essa última dependência é a integração do Thymeleaf com o Spring4. Afinal, aqui no projeto estamos usando a versão 4.0 do Spring. 
+ 
+ 
+ -->
+
+
+
+
+

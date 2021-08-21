@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <Resource name="jdbc/brewerDB" auth="Container" 
+            factory="org.apache.naming.factory.BeanFactory"
+            type="com.mchange.v2.c3p0.ComboPooledDataSource"
+            driverClass="com.mysql.cj.jdbc.Driver"
+            jdbcUrl="jdbc:mysql://localhost/brewer?allowPublicKeyRetrieval=true&amp;useSSL=false"
+            user="root"
+            password="root" 
+            initialPoolSize="5" 
+            minPoolSize="5"
+            maxPoolSize="5" 
+     />
+</Context>
+
+<!-- 
+	Segundo o professor, esse arquivo configura o Tomcat. É importante que os drivers do c3p0 estejam dentro da lib do Tomcat.
+ -->

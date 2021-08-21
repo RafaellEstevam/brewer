@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head></head>
+<body>
+	<div class="col-sm-12 text-center" th:if="${not pagina.vazia}" th:fragment="paginacao (pagina)"><!-- 11 -->
+		<nav>
+			<ul class="pagination pagination-sm" th:with="paginaAtual=${pagina.atual}"><!-- 12 -->
+				<li th:class="${pagina.primeira} ? disabled"><!-- 13 -->
+					<a th:href="${pagina.urlParaPagina(paginaAtual - 1)}" th:remove="${pagina.primeira} ? tag"><span>&laquo;</span></a><!-- 5 e 17 -->
+				</li>
+																	<!-- 15 -->
+				<th:block th:each="p : ${#numbers.sequence(1, pagina.total)}" th:with="numeroPagina=${p - 1}"><!-- 4 e 8 -->
+					<li th:class="${numeroPagina == paginaAtual} ? active"><!-- 7 -->
+						<a th:href="${pagina.urlParaPagina(numeroPagina)}">[[${p}]]</a> <!-- 2 e 9 -->
+					</li>
+				</th:block>
+				
+				<li th:class="${pagina.ultima} ? disabled"><!-- 14 -->
+					<a th:href="${pagina.urlParaPagina(paginaAtual + 1)}" th:remove="${pagina.ultima} ? tag"><span>&raquo;</span></a><!-- 16 -->
+				</li>
+			</ul>
+		</nav>
+	</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+Olhar comentários em PesquisaCervejas.html.
+
+Código para implementar botões para voltar e avançar 2 páginas:
+
+	<li th:class="${paginaAtual - 2 < 0} ? disabled"> 
+		<a th:href="|?page=${paginaAtual - 2}|" th:remove="${paginaAtual - 2 < 0} ? tag"><span>&laquo;</span></a> (comentario 5) 
+	</li> 
+
+
+	<li th:class="${paginaAtual + 2 > totalPaginasReal} ? disabled" th:with="totalPaginasReal=${pagina.total - 1}"> 
+		<a th:href="|?page=${paginaAtual + 2}|" th:remove="${paginaAtual + 2 > totalPaginasReal} ? tag"><span>&raquo;</span></a> 
+	</li>
+
+ -->

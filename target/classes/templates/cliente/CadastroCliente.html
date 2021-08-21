@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns= "http://www.w3.org/1999/xhtml" xmlns:th= "http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:data="http://www.thymeleaf.org/extras/data"
+xmlns:brewer="http://brewer.algaworks.com"
+layout:decorate = "~{layout/LayoutPadrao}">
+<head>
+	<title>Cadastro de cliente</title>
+</head>
+<body>
+	<section layout:fragment="conteudo">
+		<div class="page-header">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-10">
+						<h1>Cadastro de clientes</h1>
+					</div>
+					<div class="col-sm-2">
+						<div class="aw-page-header-controls">
+							<a class="btn btn-default" th:href="@{/cliente}">
+								<i class="fas fa-plus-circle"></i> <span class="hidden-xs hidden-sm">Pesquisa</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container-fluid">
+				
+			<form method="POST" th:object = "${cliente}" th:action="@{/cliente/novo}"><!-- só para mostrar que podemos usar o th:action se quisermos -->
+				
+				<brewer:alertmessage/>
+				
+				<div class="form-group bw-required" brewer:classforerror="nome">
+					<label for="nome" class="control-label">Nome</label>
+					<input id="nome" type="text" class="form-control" th:field ="*{nome}"/>
+				</div>
+				
+				<div class="row">
+					<div class="col-sm-4 bw-required" brewer:classforerror="tipoPessoa">
+						<label for="tipo-pessoa" class="control-label">Tipo Pessoa</label>
+						<div>
+							<th:block th:each="tipoPessoa : ${tiposPessoa}">
+								<div class="radio radio-inline">
+						<!-- 1 -->	<input th:id="|id_${tipoPessoa}|" type="radio" class="js-radio-tipo-pessoa" 
+									th:field="*{tipoPessoa}" th:value="${tipoPessoa}"
+									data:documento="${tipoPessoa.documento}" data:mascara="${tipoPessoa.mascara}"> 
+									<label class="control-label" th:for="|id_${tipoPessoa}|" th:text="${tipoPessoa.descricao}">Física</label>
+								</div>
+							</th:block>							
+						</div>
+					</div>
+					<div class="col-sm-8 form-group" brewer:classforerror="cpfOuCnpj">
+						<div class="form-group bw-required">
+							<label for="cpfOuCnpj" class="control-label">CPF/CNPJ</label>
+							<input id="cpfOuCnpj" type="text" class="form-control" disabled th:field ="*{cpfOuCnpj}"/>
+						</div>	
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="telefone" class="control-label">Telefone</label>
+							<input id="telefone" type="text" class="form-control js-phone-number" th:field ="*{telefone}"/>
+						</div>
+					</div>
+	
+					<div class="col-sm-8">
+						<div class="form-group bw-required" brewer:classforerror="email">
+							<label for="email" class="control-label">Email</label>
+							<input id="email" type="text" class="form-control" th:field ="*{email}"/>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="logradouro" class="control-label">Logradouro</label>
+							<input id="logradouro" type="text" class="form-control" th:field ="*{endereco.logradouro}"/>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group ">
+							<label for="numero" class="control-label">Número</label>
+							<input id="numero" type="text" class="form-control js-plain" th:field ="*{endereco.numero}"/>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="complemento" class="control-label">Complemento</label>
+							<input id="complemento" type="text" class="form-control" th:field ="*{endereco.complemento}"/>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="cep" class="control-label">CEP</label>
+							<input id="cep" type="text" class="form-control" th:field ="*{endereco.cep}"/>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="estado" class="control-label">Estado</label>
+							<select id="estado" class="form-control" th:field="*{endereco.estado}">
+								<option value="">Selecione o estado</option>
+								<option th:each="estado: ${estados}" th:value="${estado.id}" th:text="${estado.nome}">São Paulo</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="cidade" class="control-label">Cidade</label>
+							
+							<input type="hidden" id="inputHiddenCidadeSelecionada" th:value="*{endereco.cidade} != null ? *{endereco.cidade.id}"/>
+							
+							<div class="bw-field-action">
+								<select id="cidade" class="form-control" data:url="@{/cidade}" th:field="*{endereco.cidade}"> <!-- O disabled foi colocado aqui via javascript no carregamento da página.Foi só uma alternativa-->
+									<option value="">Selecione a cidade</option>
+								</select><!-- Select cidade foi resolvido por completo em 16.9 a partir dos 44:14 min --> 
+								
+								
+								<div class="bw-field-action__icon  js-img-loading" style="display: none"> <!-- 2 -->
+									<img th:src="@{/images/mini-loading.gif}">
+								</div>	
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="form-group">
+					<button class="btn  btn-primary" type="submit">Salvar</button>
+				</div>
+			</form>
+		</div>
+	</section>
+	
+	<th:block layout:fragment="javascript-extra">
+		<script th:src="@{/javascript/cliente.mascara-cpf-cnpj.js}"></script>
+		<script th:src="@{/javascript/cliente.combo-estado-cidade.js}"></script>
+	</th:block>
+	
+	
+	
+	
+</body>
+</html>
+
+<!-- 
+
+1. (16.4) th:attr me permite adicionar qualquer atributo na tag. Tinhamos no fim desse input o código "data-documento="CPF" data-mascara="000.000.000-00". O substituímos
+pelo th:attr para que ficasse dinâmico: th:attr="data-documento=${tipoPessoa.documento}, data-mascara=${tipoPessoa.mascara}". Porém o professor achou que esse 
+código prejudicou a leitura e preferiu usar um dialeto novo, que possui uma função específica para adicionarmos atributos nas tags HTML. 
+O dialeto se chama "thymeleaf extras data attribute". Vamos colocar a dependência dele no pom.xml, adicioná-lo lá no WebConfig como um novo dialeto, importar seu 
+xmlns aqui e aí já podemos usar a tag que queremos. Então o th:attr mostrado acima foi substituído pelo que está no código agora.
+
+2. (16.7) style="display: none" vai fazer a <div> não aparecer. É como se tivessemos colocado classe hidden. Optamos pelo  style="display: none" pois vamos usar uma
+função do Jquery que, quando determinada coisa aconteer, vai modificar o valor desse cara de "none" para "block", fazendo a div com o loading aparecer. Essa função 
+está implementada em cliente.combo-estado-cidade.js. Dentro da requisição temos o atributo "beforeSend", que vai chamar uma função específica que vai modificar esse 
+display. O atributo "complete" dessa requisição vai chamar uma outra função que também vai mudar o style="display", dessa vez de "block" para "none", fazendo a div 
+com o loading desaparecer de novo. Vai acontecer quando as cidades já tiverem sido carregadas. 
+
+ -->
+
+
+
