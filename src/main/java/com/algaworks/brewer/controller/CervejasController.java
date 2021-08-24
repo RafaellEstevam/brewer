@@ -40,7 +40,7 @@ public class CervejasController {
 	@Autowired
 	private CervejaRepository cervejaRepository;
 
-	@RequestMapping("/novo") // 1
+	@GetMapping("/novo") // 1
 	public ModelAndView novo(Cerveja cerveja) { // 2
 		ModelAndView mv = new ModelAndView("cerveja/CadastroCerveja"); // 8
 
@@ -60,12 +60,11 @@ public class CervejasController {
 
 		cervejaService.salvar(cerveja);// 10
 
-		attribute.addFlashAttribute("mensagem", "Cerveja cadastrada com sucesso!"); // 6
+		attribute.addFlashAttribute("mensagem", "Cerveja salva com sucesso!"); // 6
 		return new ModelAndView("redirect:/cervejas/novo"); // 7
 	}
 
-	@GetMapping // antes tinhamos colocado "/pesquisa". Professor tirou depois e deixou só como
-				// GET. Portanto, para chegar nesse método basta enviar um GET para /cervejas.
+	@GetMapping
 	public ModelAndView pagePesquisa(CervejaFilter cervejaFilter, BindingResult result,
 			@PageableDefault(size = 2) Pageable pageable, HttpServletRequest httpServletRequest) { // 11, 12, 13
 		ModelAndView mv = new ModelAndView("cerveja/PesquisaCervejas");
@@ -83,6 +82,38 @@ public class CervejasController {
 	}
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
  * 1. Recebe as requisições GET para essa URL

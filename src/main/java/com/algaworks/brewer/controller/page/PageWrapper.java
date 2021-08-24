@@ -12,11 +12,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * @author Rafaell Estevam
- * @param <T> Essa classe só foi criada para facilitar o uso dos dados na
- *            paginação. Todos os dados do objeto "Page" que precisamos expor e
- *            usar no template, colocamos em métodos. Essa classe foi criada
- *            principalmente para gerar a URL corretamente para ser usada nos
- *            links de paginação, pois eles não enviavam os filtros (15.11).
+ * @param <T> 
+ * 
+ * Essa classe foi criada para facilitar o uso dos dados na
+ * paginação. Todos os dados do objeto "Page" que precisamos expor e
+ * usar no template, colocamos em métodos. Essa classe foi criada
+ * principalmente para gerar a URL corretamente para ser usada nos
+ * links de paginação, pois eles não enviavam os filtros (15.11).
  *
  */
 public class PageWrapper<T> {
@@ -26,8 +28,9 @@ public class PageWrapper<T> {
 
 	public PageWrapper(Page<T> page, HttpServletRequest httpServletRequest) {
 		this.page = page;
-		
-		String httpUrl = httpServletRequest.getRequestURL().append(httpServletRequest.getQueryString() != null ? "?" + httpServletRequest.getQueryString() : "")
+
+		String httpUrl = httpServletRequest.getRequestURL()
+				.append(httpServletRequest.getQueryString() != null ? "?" + httpServletRequest.getQueryString() : "")
 				.toString().replaceAll("\\+", "%20"); // 6
 
 		this.uriBuilder = UriComponentsBuilder.fromHttpUrl(httpUrl); // 6
@@ -77,7 +80,7 @@ public class PageWrapper<T> {
 		String direcao = "asc";
 
 		Order order = page.getSort() != null ? page.getSort().getOrderFor(propriedade) : null;
-		
+
 		if (order != null) {
 			direcao = Sort.Direction.ASC.equals(order.getDirection()) ? "desc" : "asc";
 		}
@@ -122,50 +125,16 @@ public class PageWrapper<T> {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
- * 1. (15.11). this.uriBuilder = ServletUriComponentsBuilder.fromRequest(httpServletRequest)
- * é o que tinhamos antes de corrigir o bug da pesquisa. Basicamente vai pegar a URL 
- * da requisição (que chega lá no  controller) e no método "urlParaPagina" vamos 
- * pegar essa url e se já tiver um parâmetro "page" ele vai substituí-lo pelo 
- * numero que passamos (página) e se não tiver esse parâmetro ele vai acrescentá-lo 
- * na requisição. Note que esse método só vai ser chamado quando clicarmos pra mudar 
- * a página. A informação  da URL com os filtros vai chegar lá no controller quando 
- * o cliente clicar em "Pesquisar".
+ * 1. (15.11). this.uriBuilder =
+ * ServletUriComponentsBuilder.fromRequest(httpServletRequest) é o que tinhamos
+ * antes de corrigir o bug da pesquisa. Basicamente vai pegar a URL da
+ * requisição (que chega lá no controller) e no método "urlParaPagina" vamos
+ * pegar essa url e se já tiver um parâmetro "page" ele vai substituí-lo pelo
+ * numero que passamos (página) e se não tiver esse parâmetro ele vai
+ * acrescentá-lo na requisição. Note que esse método só vai ser chamado quando
+ * clicarmos pra mudar a página. A informação da URL com os filtros vai chegar
+ * lá no controller quando o cliente clicar em "Pesquisar".
  * 
  * 
  * 2. (15.11 >> 19:10) Já sabemos que
@@ -206,18 +175,17 @@ public class PageWrapper<T> {
  * não haveria conflito entre eles.
  * 
  * 
- * 5. public String inverterDirecao(String propriedade) { 
- * 		String direcao =  "asc";
+ * 5. public String inverterDirecao(String propriedade) { String direcao =
+ * "asc";
  * 
- * 		Order order = page.getSort() != null ? page.getSort().getOrderFor(propriedade) : null;
+ * Order order = page.getSort() != null ?
+ * page.getSort().getOrderFor(propriedade) : null;
  * 
- *  	if (order != null) { 
- *  
- *  		direcao = Sort.Direction.ASC.equals(order.getDirection()) ? "desc" : "asc"; 
- *  	}
+ * if (order != null) {
  * 
- * 		return direcao; 
- * 	  }
+ * direcao = Sort.Direction.ASC.equals(order.getDirection()) ? "desc" : "asc"; }
+ * 
+ * return direcao; }
  * 
  * 
  * 6.Quando é submetido um formulário com "espaco" em uma QUERY_PARAM (um
@@ -231,17 +199,18 @@ public class PageWrapper<T> {
  * mandarmos um número decimal no formulário, ele consegue converter a "," para
  * "%2C" mas o caractere "espaço" ele não converte para "%20".
  * 
- * O que tinhamos antes era : 
+ * O que tinhamos antes era :
  * 
- * this.uriBuilder = ServletUriComponentsBuilder.fromRequest(httpServletRequest);//1 
+ * this.uriBuilder =
+ * ServletUriComponentsBuilder.fromRequest(httpServletRequest);//1
  * 
  * Observações:
  * 
- * 1. O getRequestURL() retorna só "localhost:8080/brewer/cervejas".
- * 2. A parte da consulta, que começa a partir de "?", se chama QUERY_STRING.
- * 3. Cada atributo dessa QUERY_STRING se chama QUERY_PARAM (ex: nome=becks).
- * 4. "\\+" vai pegar todo caractere "+" da String passada.
- * 5. "%20" é o código que ele vai entender para "espaço".
+ * 1. O getRequestURL() retorna só "localhost:8080/brewer/cervejas". 2. A parte
+ * da consulta, que começa a partir de "?", se chama QUERY_STRING. 3. Cada
+ * atributo dessa QUERY_STRING se chama QUERY_PARAM (ex: nome=becks). 4. "\\+"
+ * vai pegar todo caractere "+" da String passada. 5. "%20" é o código que ele
+ * vai entender para "espaço".
  * 
  * 
  * 

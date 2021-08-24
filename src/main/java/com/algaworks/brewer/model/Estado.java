@@ -86,4 +86,12 @@ public class Estado implements Serializable {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "id=" + id + ", nome=" + nome;
+	}
+
+	
+	
+	
 }

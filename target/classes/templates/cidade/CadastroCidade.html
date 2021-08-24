@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt" xmlns= "http://www.w3.org/1999/xhtml" xmlns:th= "http://www.thymeleaf.org" 
 xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:brewer="http://brewer.algaworks.com"
 layout:decorate = "~{layout/LayoutPadrao}">
 <head>
 	<title>Cadastro de cidade</title>
@@ -20,14 +21,17 @@ layout:decorate = "~{layout/LayoutPadrao}">
 			
 			<form method="POST" th:object="${cidade}"  class="form-vertical  js-form-loading">
 				
+				<brewer:alertmessage/>
+				
 				<div class="row">
-					<div class="col-sm-4 bw-required">
+					<div class="col-sm-4 bw-required" brewer:classforerror="estado">
 						<label for="estado" class="control-label">Estado</label>
-						<select id="estado" class="form-control">
+						<select id="estado" class="form-control" th:field="*{estado}">
 							<option value="">Selecione o estado</option>
+							<option th:each="estado : ${estados}" th:value="${estado.id}" th:text="${estado.nome}"></option>
 						</select>
 					</div>
-					<div class="col-sm-8 form-group bw-required">
+					<div class="col-sm-8 form-group bw-required" brewer:classforerror="nome">
 						<label for="nome" class="control-label">Nome</label>
 						<input type="text" id="nome" class="form-control" th:field="*{nome}">
 					</div>

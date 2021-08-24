@@ -155,3 +155,15 @@
 	text-align: right;
 }
 
+/* Colunas - Pesquisa de Cidades */
+.table-cidades-col-nome {
+	width: 78%;
+}
+
+.table-cidades-col-estado {
+	width: 12%;
+}
+
+.table-cidades-col-acoes {
+	width: 10%;
+}
