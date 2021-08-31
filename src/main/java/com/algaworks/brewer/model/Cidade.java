@@ -29,10 +29,10 @@ public class Cidade implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotBlank(message = "nome é obrigatório")
+	@NotBlank(message = "O nome é obrigatório")
 	private String nome;
 	
-	@NotNull(message = "estado é obrigatório")
+	@NotNull(message = "O estado é obrigatório")
 	@ManyToOne(fetch = FetchType.LAZY)//2
 	@JsonIgnore //1 
 	private Estado estado;
@@ -63,6 +63,11 @@ public class Cidade implements Serializable {
 		this.estado = estado;
 	}
 
+	public boolean temEstado() {
+		return this.estado !=null;
+	}
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

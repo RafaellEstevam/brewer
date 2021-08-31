@@ -11,13 +11,13 @@ import org.hibernate.validator.constraints.NotBlank;
 public class Usuario {
 
 	private Long id;
-	@NotBlank(message="Nome é obrigatório!")
+	@NotBlank(message="O nome é obrigatória")
 	private String nome;
-	@NotBlank(message="E-mail é obrigatório!")
+	@NotBlank(message="E-mail é obrigatório")
 	private String email;
-	@NotBlank(message="Data de nascimento é obrigatório!")
+	@NotBlank(message="A data de nascimento é obrigatória")
 	private LocalDate dataNascimento;
-	@NotBlank(message="Senha é obrigatório!")
+	@NotBlank(message="A senha é obrigatória")
 	private String senha;
 
 	public Long getId() {

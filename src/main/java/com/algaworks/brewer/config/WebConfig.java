@@ -2,8 +2,13 @@ package com.algaworks.brewer.config;
 
 import java.math.BigDecimal;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.BeansException;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
+import org.springframework.cache.guava.GuavaCacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +37,7 @@ import com.algaworks.brewer.controller.converter.EstadoConverter;
 import com.algaworks.brewer.controller.converter.EstiloConverter;
 import com.algaworks.brewer.thymeleaf.BrewerDialect;
 import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect;
+import com.google.common.cache.CacheBuilder;
 
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 
@@ -43,6 +49,7 @@ import nz.net.ultraq.thymeleaf.LayoutDialect;
 @ComponentScan(basePackageClasses = { CervejasController.class })
 @EnableWebMvc
 @EnableSpringDataWebSupport//8
+@EnableCaching//11
 public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationContextAware {
 
 	/*1*/
@@ -122,7 +129,17 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 	}
 	
 	
-	
+	@Bean
+	public CacheManager cacheManager() {//11 e 12
+		CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder()
+				.maximumSize(3)
+				.expireAfterAccess(20, TimeUnit.SECONDS);
+		
+		GuavaCacheManager cacheManager = new GuavaCacheManager();
+		cacheManager.setCacheBuilder(cacheBuilder);
+		
+		return cacheManager;
+	}
 	
 	
 	
@@ -163,6 +180,21 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
  *
  *10. (16.4) Adicionando o dialeto thymeleaf-extras-data-attribute para que possamos gerar atributos nas tags HTML de forma mais fácil.
  *
+ *11. Olhar CidadeController item 3.
+ *
+ *12. (17.3) implementando cache profissinal com Guava do Google: 
+ *	1. Adicionar a dependência do Guava e do projeto do spring que vai dar suporte à ele, chamado Spring Context Support, no pom.xml
+ *
+ *	2. No WebConfig, alterar ou criar o método cacheManager() implementando as configurações do guava. Somente isso. Não precisamos
+ *	alterar mais nada no Controller. As anotações continuam sendo as mesmas. Somente alteramos a implementação do cacheManager, de uma 
+ *	que era baseada em mapas(do Spring) para uma onde consigo configurar mais opções, como quantidade de entradas no cache(maximumSize). 
+ *  e tempo de expiração (expireAfterAccess). 
+ *  Em relação ao maximumSize, nesse nosso caso, cada código de lista de cidades seria uma entrada. Como colocamos 3, então ele só consegue
+ *  guardar na cache até 3 listas de cidades. Caso tentemos carregar a 4º lista, ele vai retirar uma das 3 da cache(a mais antiga) para alocar
+ *  a nova lista.
+ *  Quanto ao expireAfterAcess, significa que a lista (ou dado em questão) será expirada (apagada) depois de 20 segundos sem utilização.
+ *  Perceba que não é a cache toda que é apagada e sim somente as listas as quais se passaram 20s sem serem utilizadas.  
+ *  Enquanto estou consultando o cache os dados permanecem lá, mas se passarem 20s e ele ninguém o utilizou, ele é apagado. 
  */
 
 

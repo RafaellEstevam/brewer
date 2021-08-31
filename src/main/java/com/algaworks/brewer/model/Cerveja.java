@@ -264,7 +264,7 @@ public class Cerveja implements Serializable {
  * colocaríamos a seguinte anotação:
  * 
  * @Pattern(regexp = "([a-zA-Z]{3}\\d{4})?") >>> O usuário tem que seguir esse
- * padrão: caracteres de a-z ou A-Z {2 caracteres} \\(seguido por) d(dígitos) {4
+ * padrão: caracteres de a-z ou A-Z {3 caracteres} \\(seguido por) d(dígitos) {4
  * dígitos} ?(essa validação só será aplicada se o campo não estiver vazio).
  * 
  * B. É o que foi feito. Criar uma anotação nossa e jogar nessa anotattion

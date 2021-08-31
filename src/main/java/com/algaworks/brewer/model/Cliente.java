@@ -41,7 +41,7 @@ public class Cliente implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank(message = "Nome é obrigatório")
+	@NotBlank(message = "O nome é obrigatório")
 	private String nome;
 	
 	@NotNull(message = "Tipo Pessoa é obrigatório")
@@ -57,7 +57,7 @@ public class Cliente implements Serializable {
 
 	private String telefone;
 	
-	@NotBlank(message = "E-mail é obrigatório")
+	@NotBlank(message = "O e-mail é obrigatório")
 	@Email(message = "E-mail inválido") 
 	private String email;
 
