@@ -65,6 +65,13 @@
 		<!-- Cache - Guava -->
 		<guava.version>19.0</guava.version>
 		
+		<!-- Apache Bean Utils -->
+		<commons-beanutils.version>1.9.2</commons-beanutils.version>
+		
+		<!-- Spring Security -->
+		<spring-security-web.version>4.1.1.RELEASE</spring-security-web.version>
+		
+		
 	</properties>
 	
 	<build>
@@ -248,6 +255,22 @@
 			<scope>compile</scope>
 		</dependency>
 		
+		<!--7. Apache Bean Utils (18.4)-->
+		<dependency>
+    		<groupId>commons-beanutils</groupId>
+    		<artifactId>commons-beanutils</artifactId>
+    		<version>${commons-beanutils.version}</version>
+    		<scope>compile</scope>
+		</dependency>
+		
+		<!-- Spring Security (18.9)-->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>${spring-security-web.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		
 	</dependencies>
 </project>
 
@@ -309,7 +332,9 @@ ________________________________________________________________________________
 5. Essa última dependência é a integração do Thymeleaf com o Spring4. Afinal, aqui no projeto estamos usando a versão 4.0 do Spring. 
  
  
-6. Olhar WebConfig, item 12. 
+6. Olhar WebConfig, item 12.
+
+7. (18.4) Dependência que vai nos fornecer classes utilitárias para trabalhar com classes e objetos. 
  
  -->
 

@@ -66,6 +66,6 @@ public class BrewerDialect extends AbstractProcessorDialect {
 documentação manda.
 2. Aqui vamos passar a lista de processadores que esse dialeto tem (na verdade é conjunto e não lista). Cada processador que criamos, temos que vir aqui e adicionar
 nessa lista.
-3. ATENÇÃO" O CONSTRUTOR TEM QUE SER PÚBLICO. O ECLIPSE O COLOCA AUTOMATICAMENTE COMO PROTECTED. 
+3. ATENÇÃO" O CONSTRUTOR TEM QUE SER PÚBLICO. O ECLIPSE O COLOCA AUTOMATICAMENTE COMO PROTECTED. Perceba que o construtor é sem parâmetros.
  
 */

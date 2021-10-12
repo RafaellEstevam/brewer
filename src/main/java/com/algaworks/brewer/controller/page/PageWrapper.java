@@ -206,11 +206,11 @@ public class PageWrapper<T> {
  * 
  * Observações:
  * 
- * 1. O getRequestURL() retorna só "localhost:8080/brewer/cervejas". 2. A parte
- * da consulta, que começa a partir de "?", se chama QUERY_STRING. 3. Cada
- * atributo dessa QUERY_STRING se chama QUERY_PARAM (ex: nome=becks). 4. "\\+"
- * vai pegar todo caractere "+" da String passada. 5. "%20" é o código que ele
- * vai entender para "espaço".
+ * 1. O getRequestURL() retorna só "localhost:8080/brewer/cervejas". 
+ * 2. A parte da consulta, que começa a partir de "?", se chama QUERY_STRING. 
+ * 3. Cada atributo dessa QUERY_STRING se chama QUERY_PARAM (ex: nome=becks).
+ * 4. "\\+" vai pegar todo caractere "+" da String passada. 
+ * 5. "%20" é o código que ele vai entender para "espaço".
  * 
  * 
  * 

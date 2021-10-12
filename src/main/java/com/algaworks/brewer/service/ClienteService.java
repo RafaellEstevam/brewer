@@ -23,9 +23,9 @@ public class ClienteService {
 	@Transactional
 	public void salvar(Cliente cliente) {
 
-		Optional<Cliente> clienteExistente = clienteRepository.findByCpfOuCnpj(cliente.getCpfCnpjSemFormatacao()); // 1
+		Optional<Cliente> clienteProcurado = clienteRepository.findByCpfOuCnpj(cliente.getCpfCnpjSemFormatacao()); // 1
 
-		if (clienteExistente.isPresent()) {
+		if (clienteProcurado.isPresent()) {
 			throw new CpfCnpjJaCadastradoException("CPF/CNPJ já cadastrado");
 		}
 

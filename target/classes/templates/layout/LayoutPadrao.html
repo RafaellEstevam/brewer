@@ -15,6 +15,9 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"><!-- 1 -->
 	<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/algaworks.min.css}"/>
 	<link rel="stylesheet" type="text/css" th:href="@{/layout/stylesheets/application.css}"/>
 	<link rel="stylesheet" type="text/css" th:href="@{/stylesheets/brewer.css}"/>
+	
+	<link rel="stylesheet" type="text/css" th:href="@{/stylesheets/vendors/bootstrap-datepicker.standalone.min.css}"/><!-- 9 -->
+	
 	<link rel="shortcut icon" th:href="@{/images/favicon.png}"/>
 	<script src="https://kit.fontawesome.com/4cafcb1c1a.js" crossorigin="anonymous"></script>
 	
@@ -36,6 +39,9 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"><!-- 1 -->
 	<script th:src="@{/javascript/vendors/jquery.maskMoney.min.js}"></script><!-- 5 -->
 	<script th:src="@{/javascript/vendors/jquery.mask.min.js}"></script><!-- 8 -->
 	
+	<script th:src="@{/javascript/vendors/bootstrap-datepicker.min.js}"></script><!-- 9 -->
+	<script th:src="@{/javascript/vendors/bootstrap-datepicker.pt-BR.min.js}"></script><!-- 9 -->
+	
 	<script th:src="@{/javascript/brewer.js}"></script><!-- 5 -->
 	
 	<th:block layout:fragment="javascript-extra"></th:block><!-- 7 -->
@@ -54,6 +60,10 @@ xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"><!-- 1 -->
 
 
 <!--
+
+th:fragment -> th:replace
+layout:fragment -> layout:fragment
+
 0. (5.5)
 >>> Monto aqui toda a parte que eu quero que seja comum para as páginas que estenderem esse arquivo "layoutPadrao". 
 Como o nome desse arquivo é "layout padrão", vamos por aqui o que TODAS as páginas teráo em comum (header, aside e footer). Depois podemos criar
@@ -115,6 +125,9 @@ Ver item 2 de CadastroUsuario.html.
 8.(16.1) Importando o javascript do "jquery mask plugin" para o documento. O usamos para aplicar 
 mascaras aos demais campos dos formulários, como telefone, email e etc. O uso de suas funcionalidades estão em 
 brewer.js. 
+
+
+9.(18.5) Adicionando o css e javascript do Bootstrap datepicker, para pegar datas através de um calendário. Ver CadastroUsuario.html.
 
 
  -->

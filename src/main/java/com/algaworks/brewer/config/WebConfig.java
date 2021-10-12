@@ -1,20 +1,23 @@
 package com.algaworks.brewer.config;
 
 import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.BeansException;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.cache.guava.GuavaCacheManager;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
+import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.format.number.NumberStyleFormatter;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.format.support.FormattingConversionService;
@@ -35,6 +38,7 @@ import com.algaworks.brewer.controller.CervejasController;
 import com.algaworks.brewer.controller.converter.CidadeConverter;
 import com.algaworks.brewer.controller.converter.EstadoConverter;
 import com.algaworks.brewer.controller.converter.EstiloConverter;
+import com.algaworks.brewer.controller.converter.GrupoConverter;
 import com.algaworks.brewer.thymeleaf.BrewerDialect;
 import com.github.mxab.thymeleaf.extras.dataattribute.dialect.DataAttributeDialect;
 import com.google.common.cache.CacheBuilder;
@@ -110,13 +114,21 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 		conversionService.addConverter(new EstiloConverter());
 		conversionService.addConverter(new CidadeConverter());
 		conversionService.addConverter(new EstadoConverter());
+		conversionService.addConverter(new GrupoConverter());
 		
-		
-		NumberStyleFormatter bigDecimalFormatter = new NumberStyleFormatter("#,##0.00"); //7
+		//7
+		NumberStyleFormatter bigDecimalFormatter = new NumberStyleFormatter("#,##0.00"); 
 		conversionService.addFormatterForFieldType(BigDecimal.class, bigDecimalFormatter);
 		
-		NumberStyleFormatter integerFormatter = new NumberStyleFormatter("#,##0"); //7
+		//7
+		NumberStyleFormatter integerFormatter = new NumberStyleFormatter("#,##0");
 		conversionService.addFormatterForFieldType(Integer.class, integerFormatter);
+		
+		
+		//13 (API de Datas do Java 8)
+		DateTimeFormatterRegistrar dateTimeFormatter = new DateTimeFormatterRegistrar();
+		dateTimeFormatter.setDateFormatter(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+		dateTimeFormatter.registerFormatters(conversionService);
 		
 		return conversionService;
 	}
@@ -130,15 +142,24 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
 	
 	
 	@Bean
-	public CacheManager cacheManager() {//11 e 12
+	public CacheManager cacheManager() {//11
 		CacheBuilder<Object, Object> cacheBuilder = CacheBuilder.newBuilder()
-				.maximumSize(3)
-				.expireAfterAccess(20, TimeUnit.SECONDS);
+				.maximumSize(3)// 12
+				.expireAfterAccess(20, TimeUnit.SECONDS);// 12
 		
 		GuavaCacheManager cacheManager = new GuavaCacheManager();
 		cacheManager.setCacheBuilder(cacheBuilder);
 		
 		return cacheManager;
+	}
+	
+	
+	@Bean
+	public MessageSource messageSource() {//14
+		ReloadableResourceBundleMessageSource bundle = new ReloadableResourceBundleMessageSource();
+		bundle.setBasename("classpath:/messages");
+		bundle.setDefaultEncoding("UTF-8"); // http://www.utf8-chartable.de/
+		return bundle;
 	}
 	
 	
@@ -195,6 +216,23 @@ public class WebConfig extends WebMvcConfigurerAdapter implements ApplicationCon
  *  Quanto ao expireAfterAcess, significa que a lista (ou dado em questão) será expirada (apagada) depois de 20 segundos sem utilização.
  *  Perceba que não é a cache toda que é apagada e sim somente as listas as quais se passaram 20s sem serem utilizadas.  
  *  Enquanto estou consultando o cache os dados permanecem lá, mas se passarem 20s e ele ninguém o utilizou, ele é apagado. 
+ *  
+ * 13. (18.5) Adicionando o conversor de String para LocalDate. Estamos usando-o na página de Usuário, para converter para LocalDate a data de nascimento 
+ * que é passada como String no formulário. 
+ * 
+ * 14. (18.5 +- 21:55) O método informa onde está a classe de configuração das mensagens padrões que o sistema exibe quando uma exceção é lançada. Olhar 
+ * CadastroUsuario.html, item 7. OBS: Perceba que não precisamos colocar o sufixo '.properties' em 'classpath:/messages'. 
+ * Nesse arquivo :
+ * 	*typeMismatch.java.time.LocalDate = {0} inv\u00E1lida >>> estamos dizendo que quando ele não conseguir converter para LocalDate, mostre 
+ * a mensagem {0} inv\u00E1lida, sendo {0} o campo que deu erro e por causa do á de 'inválida', tivemos que olhar na tabela UTF-8 (link no código) e 
+ * pegar o código desse caractere, colocando \ antes. Sugere-se ver a aula. Sempre que der erro de conversão podemos usar sempre esse padrão: 
+ * typeMismatch + nome da classe para o qual ele tentou converter. 
+ * 
+ *  *usuario.dataNascimento = Data de nascimento >>> estamos falando que quando ele tiver que mostrar o texto do campo dataNascimento, para ele na vdd mostrar 
+ *  o texto "Data de nascimento."
+ * 
+ * 
+ * 
  */
 
 

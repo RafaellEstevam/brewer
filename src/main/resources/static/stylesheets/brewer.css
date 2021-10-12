@@ -3,15 +3,13 @@
 # UTILIDADES
 ######################
 */
-
-.bw-glyphicon-large{
+.bw-glyphicon-large {
 	font-size: 18px;
 }
 
-.bw-required > .control-label:after{
+.bw-required>.control-label:after {
 	content: "*";
 }
-
 
 /*
 ######################
@@ -20,44 +18,40 @@
 */
 
 /* Field Action */
-.bw-field-action{
-	display:flex;	
+.bw-field-action {
+	display: flex;
 }
 
-.bw-field-action__icon{
+.bw-field-action__icon {
 	margin: 6px 0 0 5px;
 }
-
 
 /* Upload*/
 .bw-upload {
 	padding: 15px;
-	
 	border: 1px dashed #ddd;
 	border-radius: 4px;
 	background: #fafafa;
-	
 	text-align: center;
 }
 
 .bw-upload-form-file {
 	display: inline-block;
-    vertical-align: middle;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 1px;
+	vertical-align: middle;
+	position: relative;
+	overflow: hidden;
+	margin-bottom: 1px;
 }
 
-.bw-upload-form-file > input[type=file] {
+.bw-upload-form-file>input[type=file] {
 	position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    width: 100%;
-    opacity: 0;
-    cursor: pointer;
-    
-    font-size: 500px;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	width: 100%;
+	opacity: 0;
+	cursor: pointer;
+	font-size: 500px;
 }
 
 /*
@@ -76,12 +70,11 @@
 }
 
 .bw-tabela-simples table tr td {
-    border-top: none;
-    border-bottom: 1px solid #e7eaec;
-    padding: 10px;
-    vertical-align: middle;
+	border-top: none;
+	border-bottom: 1px solid #e7eaec;
+	padding: 10px;
+	vertical-align: middle;
 }
-
 
 /* Colunas - Pesquisa de Cervejas */
 .table-cervejas-col-foto {
@@ -116,14 +109,13 @@
 }
 
 /* Colunas - Pesquisa de Estilos */
-.table-estilos-col-codigo{
+.table-estilos-col-codigo {
 	width: 5%;
 }
 
-.table-estilos-col-nome{
+.table-estilos-col-nome {
 	width: 90%;
 }
-
 
 /* Colunas - Pesquisa de Clientes */
 .table-clientes-col-nome {
@@ -145,12 +137,12 @@
 	text-align: right;
 }
 
-.table-clientes-col-cidade-estado{
+.table-clientes-col-cidade-estado {
 	width: 140px;
 	text-align: right;
 }
 
-.table-clientes-col-acoes{
+.table-clientes-col-acoes {
 	width: 10%;
 	text-align: right;
 }
@@ -166,4 +158,14 @@
 
 .table-cidades-col-acoes {
 	width: 10%;
+}
+
+/*
+######################################
+# CUSTOMIZAÇÃO DE COMPONENTES
+######################################
+*/
+.checkbox input[type="checkbox"]:checked+input+label::after {
+	font-family: 'FontAwesome';
+	content: "\f00c";
 }

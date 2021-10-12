@@ -24,13 +24,13 @@ public class ClassForErrorAttributeTagProcessor extends AbstractAttributeTagProc
 
 	
 	
-	//brewer:classforerror('sku')
+	//brewer:classforerror="sku"
 	@Override
 	protected void doProcess(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName,
 			String attributeValue, IElementTagStructureHandler structureHandler) { //4
 		
-		
-		boolean hasError = FieldUtils.hasErrors(context, attributeValue);
+		// ${#fields.hasErrors('sku')} ? 'has-error'"
+		boolean hasError = FieldUtils.hasErrors(context, attributeValue); //5
 		
 		if(hasError) {
 			String classesExistentes = tag.getAttributeValue("class");
@@ -56,10 +56,20 @@ public class ClassForErrorAttributeTagProcessor extends AbstractAttributeTagProc
 /*
 1.Vamos passar o nome do nosso dialeto, que será 'brewer', lembra? Quando tivermos que chamar as tags, usaremos 'brewer:nomedatag()'. CUIDADO. Esse construtor tem que
 ser público e o Eclipse o coloca automaticamente como protected.
+
 2.Qual o nome da tag que esse processador vai processar.
+
 3.Na ordem dos atributos do construtor: Tipo de template que estamos usando; nome do nosso dialeto; nome do elemento criado(não estamos criando um elemento, por isso null); 
 se foi passado um prefixo para o elemento; nome da tag que esse processador vai processar; se foi passado um nome para a tag; PRECEDENCIA - Não entendi muito bem; 
 Se a tag será substituída por algum código ou não. Nesse caso sim, o que significa que a tag 'brewer:classforerror' vai desaparecer no HTML e dará lugar à classe
 'has-error' que será incluída no atributo 'class' do elemento.
-4. Aqui vai entrar a lógica do processamento.
+
+4. Aqui vai entrar a lógica do processamento. 
+	context: é a página HTML onde o a a tag está. É só para ele saber em qual HTML ele deve gerar o processamento.
+	tag: tag aqui refere-se à div onde "brewer:classforerror" foi colocada. atraves desse objeto conseguimos pegar qualquer atributo e valor da div.
+	attribute name: seria "classforerror"
+	attribute value: seria o "sku" de classforerror="sku"
+	structureHandler: vai ser usado para construir a classe no elemento.
+
+5. Repare que eles são equivalentes.
 */

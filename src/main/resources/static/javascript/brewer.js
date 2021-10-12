@@ -48,21 +48,45 @@ Brewer.MaskPhoneNumber = (function() {
 }());
 
 
-Brewer.mascaraCep = (function() {
+Brewer.maskCep = (function() {
 
 	
-	function mascaraCep() {
+	function maskCep() {
 		this.inputCep = $('#cep');
 	}
 	
 	
-	mascaraCep.prototype.iniciar = function() {
+	maskCep.prototype.enable = function() {
 		this.inputCep.mask('00000-000');
 	};
 	
-	return mascaraCep;
+	return maskCep;
 	
 }());
+
+
+Brewer.maskDate = (function() {
+	
+	function maskDate() {
+		this.inputDate = $('.js-date')
+	}
+	
+	
+	maskDate.prototype.enable = function() {
+		this.inputDate.mask('00/00/0000');
+		this.inputDate.datepicker({
+			orientation:'bottom',
+			language:'pt-BR',
+			autoclose:true
+		});
+	};
+	
+	
+	return maskDate;
+})();
+
+
+
 
 
 $(function() {
@@ -72,8 +96,11 @@ $(function() {
 	var maskPhoneNumber = new Brewer.MaskPhoneNumber();
 	maskPhoneNumber.enable();
 	
-	var mascaraCep = new Brewer.mascaraCep();
-	mascaraCep.iniciar();
+	var maskCep = new Brewer.maskCep();
+	maskCep.enable();
+	
+	var maskDate = new Brewer.maskDate();
+	maskDate.enable();
 	
 });
 

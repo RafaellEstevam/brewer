@@ -8,6 +8,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import com.algaworks.brewer.config.JPAConfig;
+import com.algaworks.brewer.config.SecurityConfig;
 import com.algaworks.brewer.config.ServiceConfig;
 import com.algaworks.brewer.config.WebConfig;
 
@@ -20,7 +21,7 @@ public class AppInitializer extends AbstractAnnotationConfigDispatcherServletIni
 	@Override
 	protected Class<?>[] getRootConfigClasses() { 
 		
-		return new Class<?>[] {JPAConfig.class, ServiceConfig.class};//1
+		return new Class<?>[] {JPAConfig.class, ServiceConfig.class, SecurityConfig.class};//1
 	}
 
 	@Override
@@ -62,7 +63,7 @@ Como esse método será o primeiro a ser lido, queremos que os recursos de acess
 disponíveis para os controllers usarem, quando o método "getServletConfigClasses()" for lido, pois agora sim aquela configuração foi carregada.  
 
 (9.8) Adicionamos a classe ServiceConfig. Arquivo de configuração dos nossos serviços. A princípio, leva somente a info de onde o Spring deve procurar os services.
-
+(18.9) Adicionamos a classe SecurityConfig. Arquivo de configuração do Spring Security. 
 
 2.(14.3) 
 

@@ -13,7 +13,7 @@ layout:decorate = "~{layout/LayoutPadrao}">
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-sm-10">
-						<h1>Cadastro de clientes</h1>
+						<h1>Cadastro de cliente</h1>
 					</div>
 					<div class="col-sm-2">
 						<div class="aw-page-header-controls">
@@ -31,7 +31,7 @@ layout:decorate = "~{layout/LayoutPadrao}">
 				
 				<brewer:alertmessage/>
 				
-				<div class="form-group bw-required" brewer:classforerror="nome">
+				<div class="form-group bw-required" brewer:classforerror="nome"><!-- 3 -->
 					<label for="nome" class="control-label">Nome</label>
 					<input id="nome" type="text" class="form-control" th:field ="*{nome}"/>
 				</div>
@@ -162,6 +162,8 @@ função do Jquery que, quando determinada coisa aconteer, vai modificar o valor
 está implementada em cliente.combo-estado-cidade.js. Dentro da requisição temos o atributo "beforeSend", que vai chamar uma função específica que vai modificar esse 
 display. O atributo "complete" dessa requisição vai chamar uma outra função que também vai mudar o style="display", dessa vez de "block" para "none", fazendo a div 
 com o loading desaparecer de novo. Vai acontecer quando as cidades já tiverem sido carregadas. 
+
+3. Antes: th:classappend="${#fields.hasErrors('nome')} ? 'has-error'"
 
  -->
 

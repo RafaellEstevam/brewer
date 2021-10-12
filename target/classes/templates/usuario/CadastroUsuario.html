@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="pt" xmlns= "http://www.w3.org/1999/xhtml" xmlns:th= "http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html lang="pt" xmlns= "http://www.w3.org/1999/xhtml"
+xmlns:th= "http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+xmlns:brewer="http://brewer.algaworks.com"
 layout:decorate ="~{layout/LayoutPadrao}">
 <head>
 	<title>Cadastro de usuário</title>
@@ -20,53 +23,53 @@ layout:decorate ="~{layout/LayoutPadrao}">
 				
 			<form method="POST" th:object="${usuario}" class="form-vertical  js-form-loading">
 				
-				<div class="form-group bw-required">
+				<brewer:alertmessage/>
+				
+				<div class="form-group bw-required" brewer:classforerror="nome">
 					<label for="nome" class="control-label">Nome</label>
-					<input type="text" id=nome class="form-control" th:field = "*{nome}">
+					<input type="text" id="nome" class="form-control" th:field="*{nome}">
 				</div>
 				
 				<div class="row">
-					<div class="col-sm-6 form-group bw-required">
+					<div class="col-sm-6 form-group bw-required" brewer:classforerror="email">
 						<label for="email" class="control-label">E-mail</label>
 						<input type="text" id="email" class="form-control" th:field="*{email}">
 					</div>
-					<div class="col-sm-3 form-group bw-required">
+					<div class="col-sm-3 form-group">
 						<label for="dataNascimento" class="control-label">Data de nascimento</label>
-						<input type="text" id="dataNascimento" class="form-control" th:field="*{dataNascimento}">
+						<input type="text" id="dataNascimento" class="form-control js-date" th:field="*{dataNascimento}" autocomplete="off"><!-- 4, 6 e 7 -->
 					</div>
 				</div>
 				
 				<div class="row">
-					<div class="col-sm-3 form-group bw-required">
+					<div class="col-sm-3 form-group" brewer:classforerror="senha" th:classappend="${usuario.novo} ? bw-required"><!-- 11 -->
 						<label for="senha" class="control-label">Senha</label>
 						<input type="password" id="senha" class="form-control" th:field="*{senha}">
 					</div>
-					<div class="col-sm-3 form-group bw-required">
+					<div class="col-sm-3 form-group" brewer:classforerror="confirmacaoSenha">
 						<label for="confirmacaoSenha" class="control-label">Confirmação de senha</label>
-						<input type="password" id="confirmacaoSenha" class="form-control">
+						<input type="password" id="confirmacaoSenha" class="form-control" th:field="*{confirmacaoSenha}">
 					</div>
-					<div class="col-sm-3 btn-group bw-required" data-toggle="buttons">
+					<div class="col-sm-3 btn-group" data-toggle="buttons">
 						<label class="control-label">Status</label>
 						<div>
 							<input type="checkbox" class="js-status" data-size="small" data-off-color="danger" 
-								data-on-text="Ativo" data-off-text="Inativo"/>
+								data-on-text="Ativo" data-off-text="Inativo" th:field="*{ativo}"/><!--9-->
 						</div>
 					</div>
 				</div>
 				
 				<div class="row">
-					<div class="col-sm-6 form-group bw-required">
+					<div class="col-sm-6 form-group bw-required" brewer:classforerror="grupos">
 						<label class="control-label">Grupos</label> 
 						
 						<div>
-	  						<div class="checkbox  checkbox-inline"> 
-		    					<input type="checkbox" />
-		    					<label>Administrador</label>
-	    					</div>
-	    					<div class="checkbox  checkbox-inline"> 
-		    					<input type="checkbox" />
-		    					<label>Vendedor</label>
-	    					</div>
+							<th:block th:each="grupo : ${grupos}">
+		  						<div class="checkbox  checkbox-inline"><!-- 8 --> 
+			    					<input  type="checkbox" th:value="${grupo.id}" th:field="*{grupos}"/>
+			    					<label th:for="${#ids.prev('grupos')}" th:text="${grupo.nome}">Administrador</label><!-- 10 -->
+		    					</div>
+	    					</th:block>
 						</div>
 					</div>
 				</div>
@@ -81,19 +84,64 @@ layout:decorate ="~{layout/LayoutPadrao}">
 		<script>
 			$('.js-status').bootstrapSwitch(); // 3
 		</script>
+		
 	</th:block>
 </body>
 </html>
 
 
+
+
+
+
+
 <!-- 
-1. (5.12) 
->>> Inclusão do projeto Bootstrap-switch para o campo status. Acredito que esteja ultrapassado atualmente. Ver item 7 de LayoutPadrao.html.
-_____________________________________________________________________________________________________________________________________________________________________
-2.(5.12)
->>> Bloco com os arquivos javascript dessa página que serão "colados" em LayoutPadrao, na parte indicada pela mesma tag. Com isso consigo incluir esse javascript lá
+1.(5.12) Inclusão do projeto Bootstrap-switch para o campo status. Acredito que esteja ultrapassado atualmente. Ver item 7 de LayoutPadrao.html.
+
+2.(5.12) Bloco com os arquivos javascript dessa página que serão "colados" em LayoutPadrao, na parte indicada pela mesma tag. Com isso consigo incluir esse javascript lá
 no final do layout padrão. Ver item 7 de LayoutPadrao.html.
-_____________________________________________________________________________________________________________________________________________________________________
-3. (5.12)
->>> Estamos aplicando o bootstrap switch no elemento.
+
+3.(5.12) Estamos aplicando o bootstrap switch no elemento.
+
+4.(18.5) Adicionamos um converter de String para LocalDate no WebConfig. Usamos o "Bootstrap datapicker para exibir o calendário para nós. Depois de colocado os 
+arquivos css e javascript na pasta do projeto e importando-os corretamente no html, a configuração dele é feita com o seguinte código: data-provide="datepicker" 
+sendo esse para ativar o calendário e o restante funcionalidades opcionais (tirando o autocomplete), como data-date-orientation="bottom" para disponibilizar o calendário orientado para 
+baixo. Existem outras opções na ocumentação, basta seguir o padrão de sintaxe que é data-date+nomeDaPropriedade="valor". Por exemplo, se quisermos destacar o 
+dia de hoje, podemos colocar data-date-today-highlight="true". OBS: O componente acabou sendo feito com javascript ao invés do HTML (no item 1 de brewer.js). 
+Mas abaixo está o código de como era a implementação do "datapicker" pelo HTML.
+
+						'<input type="text" id="dataNascimento" class="form-control js-date" th:field="*{dataNascimento}"
+						data-provide="datepicker" data-date-orientation="bottom" data-date-language="pt-BR"
+						data-data-autoclose="true" autocomplete="off">'
+
+
+5. (18.5) Importando o css e javascript do Bootstrap datapicker para o HTML. Acabamos jogando-os para o LayoutPadrão, pois podemos usar a data em outros páginas
+também.
+
+6. (18.5) autocomplete="off" é um componente do HTML e não do Bootstrap datepicker e serve para desabilitar a caixa de opções já digitadas que abre quando clica
+mos no input (mais visto no firefox). 
+
+
+7. (18.5 +-21:55) Quando digitamos uma data inválida, é apresentado ao usuário uma mensagem estranha "Failed to covert property value...". O que vamos fazer então 
+é configurar essa mensagem padrão que é exibida quando um determinado tipo de exceção é lançada para mostrar uma mensagem mais amigável ao usuário. 
+A primeira coisa que deve ser feita é incluir método "messageSource()" no webConfig. Nele vamos especificar onde estará o arquivo que configura essas menssagens.
+(classpath:/messages").  
+
+8. (18.8) Fizemos o binding normalmente. Também tivemos que criar o converter de String para Grupo. Só fazendo o binding e criando o converter ele já preenche 
+a lista automaticamente quando selecionamos. Outra observação é que tivemos que fazer uma pequena alteração no css, pois o checkbox que o template usa é de 
+uma biblioteca externa (não é o checkbox default do Bootstrap) e ele estava dando conflito com a forma como o thymeleaf opera, e o checkbox não funcionava. 
+Se quiser saber mais, basta ir na aula 18.8 +- aos 06:00. Adicionamos o que está na linha 177 de brewer.css.
+  
+9. (18.8) O binding é feito normalmente.
+
+10.(18.8 - 13:02) Usamos uma forma diferente para gerar o id e o for para o input e o label. Usando th:for="${#ids.prev('grupos')}", estamos dizendo que como 'for'
+queremos colocar o id do elemento acima chamado 'grupos'(é o th:field). Análogo ao #ids.prev() temos o #ids.next(). Perceba que não precisamos colocar o id no
+input, o thymeleaf já o gera para nós. É só uma forma diferente de setar o id e o for usando o Thymeleaf. É EXCECELENTE PARA SER USADO COM CHECKBOX, pois dessa forma cada input vai pertencer a um grupo diferente, e assim conseguimos selecionar
+vários. Se a idéia for essa, talvez possa ser usado com radio também.
+
+11. th:classappend="${usuario.novo} ? bw-required" foi implementado já pensando na parte de edição. Provavelmente será usado o mesmo HTML e se a página for de edição (id do
+usuário vai existir), ele adiciona a classe bw-required.
+
+
+
  -->
